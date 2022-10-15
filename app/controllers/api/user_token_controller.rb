@@ -1,4 +1,4 @@
-class UserTokenController < Knock::AuthTokenController
+class Api::UserTokenController < Knock::AuthTokenController
   private
   def auth_params
     # Without overriding the auth_params here, you get "unpermitted
