@@ -36,7 +36,9 @@ gem "bootsnap", require: false
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
 
-gem 'knock', '~> 2.1', '>= 2.1.1'
+#gem 'knock', '~> 2.1', '>= 2.1.1'
+
+gem 'knock', git: 'https://github.com/nsarno/knock', branch: 'master', ref: '9214cd027422df8dc31eb67c60032fbbf8fc100b'
 
 gem 'sprockets', '~> 4.1', '>= 4.1.1'
 
