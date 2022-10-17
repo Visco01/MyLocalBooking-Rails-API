@@ -8,6 +8,6 @@ class User < ApplicationRecord
   def authenticate(password)
     # Do your custom authentication here.
     # Return `true` if the auth should succeed, or `false` if it should fail.
-    User.find_by(password: password)
+    User.find_by(password_digest: password)
   end
 end
