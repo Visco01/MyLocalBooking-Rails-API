@@ -40,6 +40,8 @@ gem "bootsnap", require: false
 
 gem 'knock', git: 'https://github.com/nsarno/knock', branch: 'master', ref: '9214cd027422df8dc31eb67c60032fbbf8fc100b'
 
+gem 'active_model_serializers', '~> 0.10.13'
+
 gem 'versionist', '~> 2.0', '>= 2.0.1'
 
 gem 'sprockets', '~> 4.1', '>= 4.1.1'
