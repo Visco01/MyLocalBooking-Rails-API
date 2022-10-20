@@ -10,9 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_17_113208) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_20_085549) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "app_users", force: :cascade do |t|
+    t.string "cellphone"
+    t.string "password_digest"
+    t.string "email"
+    t.string "firstname"
+    t.string "lastname"
+    t.date "dob"
+  end
+
+  create_table "clients", force: :cascade do |t|
+    t.bigint "app_user_id"
+    t.index ["app_user_id"], name: "index_clients_on_app_user_id", unique: true
+  end
+
+  create_table "providers", force: :cascade do |t|
+    t.bigint "app_user_id"
+    t.boolean "isverified"
+    t.integer "maxstrikes"
+    t.string "companyname"
+    t.index ["app_user_id"], name: "index_providers_on_app_user_id", unique: true
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "name"
@@ -21,4 +43,6 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_17_113208) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "clients", "app_users"
+  add_foreign_key "providers", "app_users"
 end
