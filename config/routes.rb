@@ -11,6 +11,7 @@ Rails.application.routes.draw do
         end
 
         resources :providers, :clients
+        resources :slots
       end
 
   end
