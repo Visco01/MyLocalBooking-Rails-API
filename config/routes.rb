@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :reservations
 
   namespace :api do
       get 'test_jwt', to: 'test_jwt#index'
@@ -10,8 +11,8 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients
-        resources :slots
+        resources :providers, :clients, :slots, :reservations
+
       end
 
   end
