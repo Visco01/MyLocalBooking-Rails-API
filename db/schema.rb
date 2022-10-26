@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_25_142456) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_26_093826) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -21,6 +21,12 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_142456) do
     t.string "firstname"
     t.string "lastname"
     t.date "dob"
+  end
+
+  create_table "blacklists", force: :cascade do |t|
+    t.string "usercellphone"
+    t.bigint "provider_id", null: false
+    t.index ["provider_id"], name: "index_blacklists_on_provider_id"
   end
 
   create_table "clients", force: :cascade do |t|
@@ -57,6 +63,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_25_142456) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "blacklists", "providers"
   add_foreign_key "clients", "app_users"
   add_foreign_key "providers", "app_users"
   add_foreign_key "reservations", "clients"

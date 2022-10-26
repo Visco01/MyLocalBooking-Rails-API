@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :blacklists
   resources :reservations
 
   namespace :api do
@@ -11,7 +12,7 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients, :slots, :reservations
+        resources :providers, :clients, :slots, :reservations, :blacklists
 
       end
 
