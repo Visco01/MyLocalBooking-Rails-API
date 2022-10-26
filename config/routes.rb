@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :strikes
   resources :blacklists
   resources :reservations
 
@@ -12,7 +13,7 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients, :slots, :reservations, :blacklists
+        resources :providers, :clients, :slots, :reservations, :blacklists, :strikes
 
       end
 
