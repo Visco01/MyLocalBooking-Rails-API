@@ -1,7 +1,4 @@
 Rails.application.routes.draw do
-  resources :strikes
-  resources :blacklists
-  resources :reservations
 
   namespace :api do
       get 'test_jwt', to: 'test_jwt#index'
@@ -13,7 +10,7 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients, :slots, :reservations, :blacklists, :strikes
+        resources :providers, :clients, :slots, :reservations, :blacklists, :strikes, :establishments
 
       end
 
