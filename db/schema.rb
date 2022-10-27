@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_27_140212) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_27_141046) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_140212) do
     t.bigint "slot_blueprint_id", null: false
     t.time "maxduration"
     t.index ["slot_blueprint_id"], name: "index_manual_slot_blueprints_on_slot_blueprint_id"
+  end
+
+  create_table "periodic_slot_blueprints", force: :cascade do |t|
+    t.time "fromtime"
+    t.time "totime"
+    t.bigint "slot_blueprint_id", null: false
+    t.index ["slot_blueprint_id"], name: "index_periodic_slot_blueprints_on_slot_blueprint_id"
   end
 
   create_table "providers", force: :cascade do |t|
@@ -110,6 +117,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_140212) do
   add_foreign_key "clients", "app_users"
   add_foreign_key "establishments", "providers"
   add_foreign_key "manual_slot_blueprints", "slot_blueprints"
+  add_foreign_key "periodic_slot_blueprints", "slot_blueprints"
   add_foreign_key "providers", "app_users"
   add_foreign_key "ratings", "clients"
   add_foreign_key "ratings", "establishments"
