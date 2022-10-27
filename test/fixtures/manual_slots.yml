@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  fromtime: 2022-10-27 16:20:43
+  totime: 2022-10-27 16:20:43
+  slot: one
+  manual_slot_blueprint: one
+
+two:
+  fromtime: 2022-10-27 16:20:43
+  totime: 2022-10-27 16:20:43
+  slot: two
+  manual_slot_blueprint: two

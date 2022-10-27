@@ -4,4 +4,5 @@ class Slot < ApplicationRecord
   belongs_to :app_user
   has_many :reservations
   has_many :clients, through: :reservations
+  has_many :manual_slots
 end

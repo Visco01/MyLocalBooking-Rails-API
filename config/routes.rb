@@ -12,7 +12,7 @@ Rails.application.routes.draw do
 
         resources :providers, :clients, :slots, :reservations,
         :blacklists, :strikes, :establishments, :ratings,
-        :slot_blueprints, :manual_slot_blueprints, :periodic_slot_blueprints
+        :slot_blueprints, :manual_slot_blueprints, :periodic_slot_blueprints, :manual_slots
 
       end
 
