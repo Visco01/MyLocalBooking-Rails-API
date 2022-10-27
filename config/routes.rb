@@ -10,7 +10,9 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients, :slots, :reservations, :blacklists, :strikes, :establishments, :ratings, :slot_blueprints
+        resources :providers, :clients, :slots, :reservations,
+        :blacklists, :strikes, :establishments, :ratings,
+        :slot_blueprints, :manual_slot_blueprints
 
       end
 
