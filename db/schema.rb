@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_27_142043) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_27_142726) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,6 +66,13 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_142043) do
     t.time "totime"
     t.bigint "slot_blueprint_id", null: false
     t.index ["slot_blueprint_id"], name: "index_periodic_slot_blueprints_on_slot_blueprint_id"
+  end
+
+  create_table "periodic_slots", force: :cascade do |t|
+    t.bigint "slot_id", null: false
+    t.bigint "periodic_slot_blueprint_id", null: false
+    t.index ["periodic_slot_blueprint_id"], name: "index_periodic_slots_on_periodic_slot_blueprint_id"
+    t.index ["slot_id"], name: "index_periodic_slots_on_slot_id"
   end
 
   create_table "providers", force: :cascade do |t|
@@ -129,6 +136,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_142043) do
   add_foreign_key "manual_slots", "manual_slot_blueprints"
   add_foreign_key "manual_slots", "slots"
   add_foreign_key "periodic_slot_blueprints", "slot_blueprints"
+  add_foreign_key "periodic_slots", "periodic_slot_blueprints"
+  add_foreign_key "periodic_slots", "slots"
   add_foreign_key "providers", "app_users"
   add_foreign_key "ratings", "clients"
   add_foreign_key "ratings", "establishments"
