@@ -44,6 +44,8 @@ gem 'active_model_serializers', '~> 0.10.13'
 
 gem 'versionist', '~> 2.0', '>= 2.0.1'
 
+gem 'figaro', '~> 1.2'
+
 gem 'sprockets', '~> 4.1', '>= 4.1.1'
 
 group :development, :test do
