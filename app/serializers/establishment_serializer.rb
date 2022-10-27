@@ -1,5 +1,5 @@
 class EstablishmentSerializer < ActiveModel::Serializer
-  attributes :id, :name, :lat, :long, :app_user
+  attributes :id, :name, :lat, :lng, :app_user
   # has_one :provider
 
   def app_user
