@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  weekdays: 1
+  reservationlimit: 1
+  fromdate: 2022-10-27
+  todate: 2022-10-27
+  establishment: one
+
+two:
+  weekdays: 1
+  reservationlimit: 1
+  fromdate: 2022-10-27
+  todate: 2022-10-27
+  establishment: two

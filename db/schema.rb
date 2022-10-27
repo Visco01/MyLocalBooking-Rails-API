@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_27_131403) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_27_134210) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -68,6 +68,15 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_131403) do
     t.index ["slot_id"], name: "index_reservations_on_slot_id", unique: true
   end
 
+  create_table "slot_blueprints", force: :cascade do |t|
+    t.integer "weekdays"
+    t.integer "reservationlimit"
+    t.date "fromdate"
+    t.date "todate"
+    t.bigint "establishment_id", null: false
+    t.index ["establishment_id"], name: "index_slot_blueprints_on_establishment_id"
+  end
+
   create_table "slots", force: :cascade do |t|
     t.string "password_digest"
     t.date "date"
@@ -97,6 +106,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_27_131403) do
   add_foreign_key "ratings", "establishments"
   add_foreign_key "reservations", "clients"
   add_foreign_key "reservations", "slots"
+  add_foreign_key "slot_blueprints", "establishments"
   add_foreign_key "slots", "app_users"
   add_foreign_key "strikes", "providers"
 end
