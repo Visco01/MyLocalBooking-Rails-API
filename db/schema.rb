@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_28_124953) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_085104) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -95,10 +95,8 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_28_124953) do
   end
 
   create_table "reservations", force: :cascade do |t|
-    t.bigint "client_id"
-    t.bigint "slot_id"
-    t.index ["client_id"], name: "index_reservations_on_client_id", unique: true
-    t.index ["slot_id"], name: "index_reservations_on_slot_id", unique: true
+    t.bigint "client_id", null: false
+    t.bigint "slot_id", null: false
   end
 
   create_table "slot_blueprints", force: :cascade do |t|
@@ -113,8 +111,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_28_124953) do
   create_table "slots", force: :cascade do |t|
     t.string "password_digest"
     t.date "date"
-    t.bigint "app_user_id"
-    t.index ["app_user_id"], name: "index_slots_on_app_user_id", unique: true
+    t.bigint "app_user_id", null: false
   end
 
   create_table "strikes", force: :cascade do |t|
