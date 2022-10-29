@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_10_29_085104) do
+ActiveRecord::Schema[7.0].define(version: 2022_10_29_185245) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -128,21 +128,21 @@ ActiveRecord::Schema[7.0].define(version: 2022_10_29_085104) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "blacklists", "providers"
-  add_foreign_key "clients", "app_users"
-  add_foreign_key "establishments", "providers"
-  add_foreign_key "manual_slot_blueprints", "slot_blueprints"
-  add_foreign_key "manual_slots", "manual_slot_blueprints"
-  add_foreign_key "manual_slots", "slots"
-  add_foreign_key "periodic_slot_blueprints", "slot_blueprints"
-  add_foreign_key "periodic_slots", "periodic_slot_blueprints"
-  add_foreign_key "periodic_slots", "slots"
-  add_foreign_key "providers", "app_users"
-  add_foreign_key "ratings", "clients"
-  add_foreign_key "ratings", "establishments"
-  add_foreign_key "reservations", "clients"
-  add_foreign_key "reservations", "slots"
+  add_foreign_key "blacklists", "providers", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "clients", "app_users", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "establishments", "providers", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "manual_slot_blueprints", "slot_blueprints", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "manual_slots", "manual_slot_blueprints", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "manual_slots", "slots", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "periodic_slot_blueprints", "slot_blueprints", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "periodic_slots", "periodic_slot_blueprints", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "periodic_slots", "slots", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "providers", "app_users", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "ratings", "clients", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "ratings", "establishments", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "reservations", "clients", on_update: :cascade, on_delete: :cascade
+  add_foreign_key "reservations", "slots", on_update: :cascade, on_delete: :cascade
   add_foreign_key "slot_blueprints", "establishments"
-  add_foreign_key "slots", "app_users"
-  add_foreign_key "strikes", "providers"
+  add_foreign_key "slots", "app_users", on_update: :cascade
+  add_foreign_key "strikes", "providers", on_update: :cascade, on_delete: :cascade
 end
