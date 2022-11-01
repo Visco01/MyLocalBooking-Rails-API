@@ -28,21 +28,30 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
       unless json_object[:Client].nil?
 
-        connection.exec_prepared("insert_client",
-        [json_object[:password_digest], json_object[:cellphone],
-        json_object[:email], json_object[:firstname],
-        json_object[:lastname], json_object[:dob],
-        json_object[:Client][:lat], json_object[:Client][:lng]])
+        begin
+          connection.exec_prepared('insert_client',
+                                   [json_object[:password_digest], json_object[:cellphone],
+                                    json_object[:email], json_object[:firstname],
+                                    json_object[:lastname], json_object[:dob],
+                                    json_object[:Client][:lat], json_object[:Client][:lng]])
+        rescue
+          connection.prepare('insert_client', 'CALL insert_client($1, $2, $3, $4, $5, $6, $7, $8)')
+        end
 
       end
 
       unless request.params[:Provider].nil?
 
-        connection.exec_prepared("insert_provider",
-        [json_object[:password_digest], json_object[:cellphone],
-        json_object[:email], json_object[:firstname],
-        json_object[:lastname], json_object[:dob],
-        json_object[:Provider][:isverified], json_object[:Provider][:maxstrikes], json_object[:Provider][:companyname]])
+
+        begin
+          connection.exec_prepared('insert_provider',
+                                   [json_object[:password_digest], json_object[:cellphone],
+                                    json_object[:email], json_object[:firstname],
+                                    json_object[:lastname], json_object[:dob],
+                                    json_object[:Provider][:isverified], json_object[:Provider][:maxstrikes], json_object[:Provider][:companyname]])
+        rescue
+          connection.prepare('insert_provider', 'CALL insert_provider($1, $2, $3, $4, $5, $6, $7, $8, $9)')
+        end
 
       end
 
