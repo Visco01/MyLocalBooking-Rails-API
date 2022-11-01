@@ -29,28 +29,21 @@ class Api::V1::AppUsersController < Api::V1::BaseController
       unless json_object[:Client].nil?
 
         begin
-          connection.exec_prepared('insert_client',
-                                   [json_object[:password_digest], json_object[:cellphone],
-                                    json_object[:email], json_object[:firstname],
-                                    json_object[:lastname], json_object[:dob],
-                                    json_object[:Client][:lat], json_object[:Client][:lng]])
+          insert_client(json_object)
         rescue
           connection.prepare('insert_client', 'CALL insert_client($1, $2, $3, $4, $5, $6, $7, $8)')
+          insert_client(json_object)
         end
 
       end
 
       unless request.params[:Provider].nil?
 
-
         begin
-          connection.exec_prepared('insert_provider',
-                                   [json_object[:password_digest], json_object[:cellphone],
-                                    json_object[:email], json_object[:firstname],
-                                    json_object[:lastname], json_object[:dob],
-                                    json_object[:Provider][:isverified], json_object[:Provider][:maxstrikes], json_object[:Provider][:companyname]])
+          insert_provider(json_object)
         rescue
           connection.prepare('insert_provider', 'CALL insert_provider($1, $2, $3, $4, $5, $6, $7, $8, $9)')
+          insert_provider(json_object)
         end
 
       end
@@ -85,4 +78,23 @@ class Api::V1::AppUsersController < Api::V1::BaseController
   def app_user_params
     params.require(:app_user).permit(:cellphone, :password_digest, :email, :firstname, :lastname, :dob)
   end
+
+  def insert_client(json_object)
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec_prepared('insert_client',
+                             [json_object[:password_digest], json_object[:cellphone],
+                              json_object[:email], json_object[:firstname],
+                              json_object[:lastname], json_object[:dob],
+                              json_object[:Client][:lat], json_object[:Client][:lng]])
+  end
+
+  def insert_provider(json_object)
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec_prepared('insert_provider',
+                             [json_object[:password_digest], json_object[:cellphone],
+                              json_object[:email], json_object[:firstname],
+                              json_object[:lastname], json_object[:dob],
+                              json_object[:Provider][:isverified], json_object[:Provider][:maxstrikes], json_object[:Provider][:companyname]])
+  end
+
 end
