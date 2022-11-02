@@ -15,12 +15,23 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
 
   # POST /slot_blueprints
   def create
-    @slot_blueprint = SlotBlueprint.new(slot_blueprint_params)
+    # @slot_blueprint = SlotBlueprint.new(slot_blueprint_params)
 
-    if @slot_blueprint.save
-      render json: @slot_blueprint, status: :created, location: @slot_blueprint
-    else
-      render json: @slot_blueprint.errors, status: :unprocessable_entity
+    # if @slot_blueprint.save
+    #   render json: @slot_blueprint, status: :created, location: @slot_blueprint
+    # else
+    #   render json: @slot_blueprint.errors, status: :unprocessable_entity
+    # end
+
+    begin
+      json_object = request.params
+      connection = ActiveRecord::Base.connection.raw_connection
+
+
+
+      render json: 'SlotBlueprint created successfully', status: :created
+    rescue => e
+      render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
   end
 

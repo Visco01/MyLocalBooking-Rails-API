@@ -30,7 +30,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
         begin
           insert_client(json_object)
-        rescue
+        rescue PG::InvalidSqlStatementName => e
           connection.prepare('insert_client', 'CALL insert_client($1, $2, $3, $4, $5, $6, $7, $8)')
           insert_client(json_object)
         end
@@ -41,7 +41,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
         begin
           insert_provider(json_object)
-        rescue
+        rescue PG::InvalidSqlStatementName => e
           connection.prepare('insert_provider', 'CALL insert_provider($1, $2, $3, $4, $5, $6, $7, $8, $9)')
           insert_provider(json_object)
         end

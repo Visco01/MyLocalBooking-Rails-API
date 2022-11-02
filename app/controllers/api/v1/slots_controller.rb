@@ -15,12 +15,43 @@ class Api::V1::SlotsController < Api::V1::BaseController
 
   # POST /slots
   def create
-    @slot = Slot.new(slot_params)
+    # @slot = Slot.new(slot_params)
 
-    if @slot.save
-      render json: @slot, status: :created, location: @slot
-    else
-      render json: @slot.errors, status: :unprocessable_entity
+    # if @slot.save
+    #   render json: @slot, status: :created, location: @slot
+    # else
+    #   render json: @slot.errors, status: :unprocessable_entity
+    # end
+
+    begin
+      json_object = request.params
+      connection = ActiveRecord::Base.connection.raw_connection
+
+      unless json_object[:PeriodicSlot].nil?
+
+        begin
+          insert_periodic_slot(json_object)
+        rescue PG::InvalidSqlStatementName => e
+          connection.prepare('insert_periodic_slot', 'CALL insert_periodic_slot($1, $2, $3, $4)')
+          insert_periodic_slot(json_object)
+        end
+
+      end
+
+      unless json_object[:ManualSlot].nil?
+
+        begin
+          insert_manual_slot(json_object)
+        rescue PG::InvalidSqlStatementName => e
+          connection.prepare('insert_manual_slot', 'CALL insert_manual_slot($1, $2, $3, $4, $5, $6)')
+          insert_manual_slot(json_object)
+        end
+
+      end
+
+      render json: 'Slot created successfully', status: :created
+    rescue => e
+      render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
   end
 
@@ -39,13 +70,28 @@ class Api::V1::SlotsController < Api::V1::BaseController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_slot
-      @slot = Slot.find(params[:id])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_slot
+    @slot = Slot.find(params[:id])
+  end
 
-    # Only allow a list of trusted parameters through.
-    def slot_params
-      params.require(:slot).permit(:password_digest, :date, :app_user_id)
-    end
+  # Only allow a list of trusted parameters through.
+  def slot_params
+    params.require(:slot).permit(:password_digest, :date, :app_user_id)
+  end
+
+  # IN app_user_id bigint, IN date date, IN password_digest text, IN periodic_slot_blueprint_id bigint
+  def insert_periodic_slot(json_object)
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec_prepared('insert_periodic_slot',
+                             [json_object[:app_user_id], json_object[:date], json_object[:password_digest], json_object[:PeriodicSlot][:periodic_slot_blueprint_id]])
+  end
+
+  # IN app_user_id bigint, IN date date, IN password_digest text, IN manual_slot_blueprint_id bigint, IN fromtime time without time zone, IN totime time
+  def insert_manual_slot(json_object)
+    connection = ActiveRecord::Base.connection.raw_connection
+    connection.exec_prepared('insert_manual_slot',
+                             [json_object[:app_user_id], json_object[:date], json_object[:password_digest], json_object[:ManualSlot][:manual_slot_blueprint_id],
+                              json_object[:fromtime], json_object[:totime]])
+  end
 end
