@@ -27,7 +27,27 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
       json_object = request.params
       connection = ActiveRecord::Base.connection.raw_connection
 
+      unless json_object[:PeriodicSlotBlueprint].nil?
 
+        begin
+          insert_periodic_slot_blueprint(json_object)
+        rescue PG::InvalidSqlStatementName => e
+          connection.prepare('insert_periodic_slot_blueprint', 'CALL insert_periodic_slot_blueprint($1, $2, $3, $4, $5, $6, $7)')
+          insert_periodic_slot_blueprint(json_object)
+        end
+
+      end
+
+      unless json_object[:ManualSlotBlueprint].nil?
+
+        begin
+          insert_manual_slot_blueprint(json_object)
+        rescue PG::InvalidSqlStatementName => e
+          connection.prepare('insert_manual_slot_blueprint', 'CALL insert_manual_slot_blueprint($1, $2, $3, $4, $5, $6, $7, $8)')
+          insert_manual_slot_blueprint(json_object)
+        end
+
+      end
 
       render json: 'SlotBlueprint created successfully', status: :created
     rescue => e
@@ -58,5 +78,31 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
     # Only allow a list of trusted parameters through.
     def slot_blueprint_params
       params.require(:slot_blueprint).permit(:weekdays, :reservationlimit, :fromdate, :todate, :establishment_id)
+    end
+
+    # IN establishment_id bigint, IN weekdays integer, IN reservationlimit integer, IN fromdate date, IN todate date, IN fromtime time, IN totime time
+    def insert_periodic_slot_blueprint(json_object)
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec_prepared('insert_periodic_slot_blueprint',
+                               [json_object[:establishment_id],
+                                json_object[:weekdays],
+                                json_object[:reservationlimit],
+                                json_object[:fromdate],
+                                json_object[:todate],
+                                json_object[:PeriodicSlotBlueprint][:fromtime],
+                                json_object[:PeriodicSlotBlueprint][:totime]])
+    end
+
+    def insert_manual_slot_blueprint(json_object)
+      connection = ActiveRecord::Base.connection.raw_connection
+      connection.exec_prepared('insert_manual_slot_blueprint',
+                               [json_object[:establishment_id],
+                                json_object[:weekdays],
+                                json_object[:reservationlimit],
+                                json_object[:fromdate],
+                                json_object[:todate],
+                                json_object[:ManualSlotBlueprint][:opentime],
+                                json_object[:ManualSlotBlueprint][:closetime],
+                                json_object[:ManualSlotBlueprint][:maxduration]])
     end
 end
