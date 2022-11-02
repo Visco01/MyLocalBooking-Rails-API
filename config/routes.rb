@@ -10,9 +10,19 @@ Rails.application.routes.draw do
           resources :clients, :providers
         end
 
-        resources :providers, :clients, :slots, :reservations,
-        :blacklists, :strikes, :establishments, :ratings,
-        :slot_blueprints, :manual_slot_blueprints, :periodic_slot_blueprints, :manual_slots, :periodic_slots
+        resources :providers, except: [:create]
+        resources :clients, except: [:create]
+        resources :slots
+        resources :reservations
+        resources :blacklists
+        resources :strikes
+        resources :establishments
+        resources :ratings
+        resources :slot_blueprints
+        resources :manual_slot_blueprints, except: [:create]
+        resources :periodic_slot_blueprints, except: [:create]
+        resources :manual_slots, except: [:create]
+        resources :periodic_slots, except: [:create]
 
       end
 
