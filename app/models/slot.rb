@@ -1,5 +1,5 @@
 class Slot < ApplicationRecord
-  has_secure_password
+  # has_secure_password
 
   belongs_to :app_user
   has_many :reservations
