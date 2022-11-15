@@ -73,6 +73,16 @@ class Api::V1::AppUsersController < Api::V1::BaseController
     render json: @app_user
   end
 
+  def change_user_password
+    @app_user = AppUser.find_by(cellphone: params[:cellphone])
+    @app_user.password_digest = request.params[:new_password]
+    if @app_user.save
+      render json: @app_user
+    else
+      render json: @app_user.errors, status: :unprocessable_entity
+    end
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_app_user
