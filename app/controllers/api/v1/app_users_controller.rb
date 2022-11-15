@@ -68,6 +68,11 @@ class Api::V1::AppUsersController < Api::V1::BaseController
     @app_user.destroy
   end
 
+  def app_user_by_cellphone
+    @app_user = AppUser.find_by(cellphone: params[:cellphone])
+    render json: @app_user
+  end
+
   private
   # Use callbacks to share common setup or constraints between actions.
   def set_app_user
