@@ -23,6 +23,7 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
 
     begin
       json_object = request.params
+      concrete_blueprint = nil
       connection = ActiveRecord::Base.connection.raw_connection
 
       unless json_object[:PeriodicSlotBlueprint].nil?
@@ -33,6 +34,8 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
           connection.prepare('insert_periodic_slot_blueprint', 'CALL insert_periodic_slot_blueprint($1, $2, $3, $4, $5, $6, $7)')
           insert_periodic_slot_blueprint(json_object)
         end
+
+        concrete_blueprint = PeriodicSlotBlueprint.last
 
       end
 
@@ -45,9 +48,11 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
           insert_manual_slot_blueprint(json_object)
         end
 
+        concrete_blueprint = ManualSlotBlueprint.last
+
       end
 
-      render json: "{\"id\": \"#{SlotBlueprint.last.id}\"}", status: :created
+      render json: "{\"slot_blueprint_id\": \"#{SlotBlueprint.last.id}\", \"concrete_blueprint_id\": \"#{concrete_blueprint.id}\"}", status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
