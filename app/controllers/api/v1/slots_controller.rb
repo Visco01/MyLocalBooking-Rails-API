@@ -55,6 +55,16 @@ class Api::V1::SlotsController < Api::V1::BaseController
     end
   end
 
+  def change_slot_password
+    @slot = Slot.find(params[:id])
+    @slot.password_digest = request.params[:new_password]
+    if @slot.save
+      render json: @slot
+    else
+      render json: @slot.errors, status: :unprocessable_entity
+    end
+  end
+
   # PATCH/PUT /slots/1
   def update
     if @slot.update(slot_params)

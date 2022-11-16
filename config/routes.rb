@@ -6,8 +6,10 @@ Rails.application.routes.draw do
 
       api_version(:module => "V1", :path => {:value => "api/v1"}, :default => true) do
 
+        # custom routes
         get 'app_user_by_cellphone/:cellphone', :to => 'app_users#app_user_by_cellphone'
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
+        patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
 
         resources :app_users do
           resources :clients, :providers
