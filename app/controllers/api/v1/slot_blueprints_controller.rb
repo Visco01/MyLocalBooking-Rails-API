@@ -15,8 +15,6 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
 
   # POST /slot_blueprints
   def create
-    # @slot_blueprint = SlotBlueprint.new(slot_blueprint_params)
-
     # if @slot_blueprint.save
     #   render json: @slot_blueprint, status: :created, location: @slot_blueprint
     # else
@@ -49,7 +47,7 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
 
       end
 
-      render json: 'SlotBlueprint created successfully', status: :created
+      render json: "{\"id\": \"#{SlotBlueprint.last.id}\"}", status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
