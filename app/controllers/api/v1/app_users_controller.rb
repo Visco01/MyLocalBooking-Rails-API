@@ -24,6 +24,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
     begin
       json_object = request.params
+      concrete_user = nil
       connection = ActiveRecord::Base.connection.raw_connection
 
       unless json_object[:Client].nil?
@@ -34,6 +35,8 @@ class Api::V1::AppUsersController < Api::V1::BaseController
           connection.prepare('insert_client', 'CALL insert_client($1, $2, $3, $4, $5, $6, $7, $8)')
           insert_client(json_object)
         end
+
+        concrete_user = Client.last
 
       end
 
@@ -46,9 +49,11 @@ class Api::V1::AppUsersController < Api::V1::BaseController
           insert_provider(json_object)
         end
 
+        concrete_user = Provider.last
+
       end
 
-      render json: {status: "200"}, status: :created
+      render json: {app_user_id: "#{AppUser.last.id}", concrete_user_id: "#{concrete_user.id}"}, status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
