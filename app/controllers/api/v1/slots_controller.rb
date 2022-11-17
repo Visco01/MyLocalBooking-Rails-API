@@ -59,9 +59,7 @@ class Api::V1::SlotsController < Api::V1::BaseController
     @slot = Slot.find(params[:id])
     @slot.password_digest = request.params[:new_password]
     if @slot.save
-      render json: {
-               status: 200
-             }
+      render {status: "200"}, status: :created
     else
       render json: @slot.errors, status: :unprocessable_entity
     end
