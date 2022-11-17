@@ -48,7 +48,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
       end
 
-      render json: 'User created successfully', status: :created
+      render json: {status: "200"}, status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
