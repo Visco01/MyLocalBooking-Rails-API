@@ -75,7 +75,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
   def app_user_by_cellphone
     @app_user = AppUser.find_by(cellphone: params[:cellphone])
-    render json: @app_user
+    render json: { app_user_id: "#{@app_user.id}" }
   end
 
   def change_user_password
