@@ -38,6 +38,15 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     @reservation.destroy
   end
 
+  def delete_reservation_by_ids
+    @reservation = Reservation.find_by(client_id: request.params[:client_id], slot_id: request.params[:slot_id])
+    if (not @reservation.nil?) and (@reservation.destroy)
+      render status: 200
+    else
+      render status: :unprocessable_entity
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_reservation
