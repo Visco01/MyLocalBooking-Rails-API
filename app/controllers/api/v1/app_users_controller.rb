@@ -76,7 +76,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
   def app_user_by_cellphone
     app_user = AppUser.find_by(cellphone: params[:cellphone])
     if not app_user.nil?
-      render json: {app_user_id: "#{app_user.id}"}, status: :found
+      render json: {app_user_id: "#{app_user.id}"}
     else
       render json: {app_user_id: app_user}, status: :not_found
     end
