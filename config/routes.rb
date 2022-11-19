@@ -8,6 +8,7 @@ Rails.application.routes.draw do
 
         # custom routes
         get 'app_user_by_cellphone/:cellphone', :to => 'app_users#app_user_by_cellphone'
+        get 'client_by_app_user_id/:app_user_id', :to => 'clients#client_by_app_user_id'
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
 
