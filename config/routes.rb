@@ -12,7 +12,7 @@ Rails.application.routes.draw do
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
         post 'reservations', :to => 'reservations#create'
-        delete 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
+        post 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
 
         resources :app_users do
           resources :clients, :providers
