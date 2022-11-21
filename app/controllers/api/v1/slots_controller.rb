@@ -25,6 +25,7 @@ class Api::V1::SlotsController < Api::V1::BaseController
 
     begin
       json_object = request.params
+      concrete_slot = nil
       connection = ActiveRecord::Base.connection.raw_connection
 
       unless json_object[:PeriodicSlot].nil?
@@ -35,6 +36,8 @@ class Api::V1::SlotsController < Api::V1::BaseController
           connection.prepare('insert_periodic_slot', 'CALL insert_periodic_slot($1, $2, $3, $4)')
           insert_periodic_slot(json_object)
         end
+
+        concrete_slot = PeriodicSlot.last
 
       end
 
@@ -47,9 +50,11 @@ class Api::V1::SlotsController < Api::V1::BaseController
           insert_manual_slot(json_object)
         end
 
+        concrete_slot = ManualSlot.last
+
       end
 
-      render json: 'Slot created successfully', status: :created
+      render json: { slot_id: "#{Slot.last.id}", concrete_slot_id: "#{concrete_slot.last.id}" }, status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
