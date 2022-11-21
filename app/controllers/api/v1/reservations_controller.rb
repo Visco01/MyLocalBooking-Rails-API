@@ -44,7 +44,7 @@ class Api::V1::ReservationsController < Api::V1::BaseController
       slot_id = nil
       slot_id = Slot.find(request.params[:slot_id]).id
       if slot_id.nil?
-        render json: { status: "OK", slot_id: null }, status: 200
+        render json: { status: "OK", slot_id: "-1" }, status: 200
       else
         render json: { status: "OK", slot_id: "#{slot_id}" }, status: 200
       end
