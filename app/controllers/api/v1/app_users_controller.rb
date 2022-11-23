@@ -81,6 +81,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
       if not concrete_user.nil?
         category = "client"
       else
+        concrete_user = Provider.find_by(app_user_id: app_user.id)
         category = "provider"
       end
 
@@ -92,6 +93,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
                     firstname: app_user.firstname,
                     lastname: app_user.lastname,
                     dob: app_user.dob,
+                    concrete_user_id: concrete_user.id,
                     category: category}
     else
       render json: {status: "not found", app_user_id: app_user}, status: :not_found
