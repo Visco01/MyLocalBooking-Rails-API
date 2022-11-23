@@ -76,6 +76,14 @@ class Api::V1::AppUsersController < Api::V1::BaseController
   def app_user_by_cellphone
     app_user = AppUser.find_by(cellphone: params[:cellphone])
     if not app_user.nil?
+      category = nil
+      concrete_user = Client.find_by(app_user_id: app_user.id)
+      if not concrete_user.nil?
+        category = "client"
+      else
+        category = "provider"
+      end
+
       render json: {status: "OK",
                     app_user_id: app_user.id,
                     cellphone: app_user.cellphone,
@@ -83,7 +91,8 @@ class Api::V1::AppUsersController < Api::V1::BaseController
                     email: app_user.email,
                     firstname: app_user.firstname,
                     lastname: app_user.lastname,
-                    dob: app_user.dob}
+                    dob: app_user.dob,
+                    category: category}
     else
       render json: {status: "not found", app_user_id: app_user}, status: :not_found
     end
