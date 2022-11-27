@@ -41,7 +41,7 @@ class Api::V1::ClientsController < Api::V1::BaseController
   def client_by_app_user_id
     client = Client.find_by(app_user_id: params[:app_user_id])
     if not client.nil?
-      render json: { client_id: "#{client.id}" }
+      render json: { status: "OK", client_id: "#{client.id}" }
     else
       render json: { client_id: client }, status: :not_found
     end
