@@ -52,7 +52,7 @@ class Api::V1::SlotBlueprintsController < Api::V1::BaseController
 
       end
 
-      render json: "{\"slot_blueprint_id\": \"#{SlotBlueprint.last.id}\", \"concrete_blueprint_id\": \"#{concrete_blueprint.id}\"}", status: :created
+      render json: { status: "OK", slot_blueprint_id: "#{SlotBlueprint.last.id}", concrete_blueprint_id: "#{concrete_blueprint.id}" }
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
