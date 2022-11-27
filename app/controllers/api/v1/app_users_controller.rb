@@ -118,7 +118,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
     @app_user = AppUser.find_by(cellphone: params[:cellphone])
     @app_user.password_digest = request.params[:new_password]
     if @app_user.save
-      render json: @app_user
+      render json: {status: "OK", password_digest: "#{@app_user.password_digest}"}
     else
       render json: @app_user.errors, status: :unprocessable_entity
     end
