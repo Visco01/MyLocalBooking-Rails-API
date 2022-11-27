@@ -18,7 +18,8 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     @reservation = Reservation.new(reservation_params)
 
     if @reservation.save
-      render json: @reservation, status: :created
+      # render json: @reservation, status: :created
+      render json: { status: "OK" }, status: :created
     else
       render json: @reservation.errors, status: :unprocessable_entity
     end
