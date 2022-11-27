@@ -54,7 +54,7 @@ class Api::V1::SlotsController < Api::V1::BaseController
 
       end
 
-      render json: { slot_id: "#{Slot.last.id}", concrete_slot_id: "#{concrete_slot.last.id}" }, status: :created
+      render json: { status: "OK", slot_id: "#{Slot.last.id}", concrete_slot_id: "#{concrete_slot.last.id}" }, status: :created
     rescue => e
       render json: "#{e.class}, #{e.message}", status: :unprocessable_entity
     end
