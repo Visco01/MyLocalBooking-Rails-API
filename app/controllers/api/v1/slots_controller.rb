@@ -13,6 +13,12 @@ class Api::V1::SlotsController < Api::V1::BaseController
     render json: @slot
   end
 
+  def slot_password_by_id
+    slot = Slot.find(params[:slot_id])
+    render json: { status: "OK", password_digest: "#{slot.password_digest}"}
+  end
+
+
   # POST /slots
   def create
     # @slot = Slot.new(slot_params)
