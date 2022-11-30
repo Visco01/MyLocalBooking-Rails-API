@@ -38,6 +38,15 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
     @establishment.destroy
   end
 
+  def establishments_by_provider_id
+    establishments = Establishment.where(provider_id: params[:provider_id])
+    if not establishments.nil?
+      render json: establishments
+    else
+      render json: {status: "not found"}, status: :not_found
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_establishment
