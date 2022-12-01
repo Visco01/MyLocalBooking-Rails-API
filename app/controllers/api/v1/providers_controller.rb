@@ -38,6 +38,16 @@ class Api::V1::ProvidersController < Api::V1::BaseController
     @provider.destroy
   end
 
+  def provider_by_app_user_id
+    provider = Provider.find_by(app_user_id: params[:app_user_id])
+    if not provider.nil?
+      render json: { status: "OK", provider_id: "#{provider.id}" }
+    else
+      render json: { provider_id: client }, status: :not_found
+    end
+  end
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_provider
