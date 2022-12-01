@@ -1,5 +1,5 @@
 class EstablishmentSerializer < ActiveModel::Serializer
-  attributes :id, :name, :lat, :lng, :address, :place_id
+  attributes :id, :name, :lat, :lng, :address, :place_id, :provider_id
   has_many :slot_blueprints
   # has_one :provider
 
