@@ -77,9 +77,9 @@ class Api::V1::SlotsController < Api::V1::BaseController
   end
 
   def concrete_slot_by_blueprint_id
-    concrete_blueprint = PeriodicSlot.find_by(periodic_slot_blueprint_id: params[:blueprint_id])
+    concrete_blueprint = PeriodicSlot.where(periodic_slot_blueprint_id: params[:blueprint_id])
     if concrete_blueprint.nil?
-      concrete_blueprint = ManualSlot.find_by(manual_slot_blueprint_id: params[:blueprint_id])
+      concrete_blueprint = ManualSlot.where(manual_slot_blueprint_id: params[:blueprint_id])
     end
 
     if not concrete_blueprint.nil?
