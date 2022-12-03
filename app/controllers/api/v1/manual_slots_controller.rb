@@ -38,6 +38,15 @@ class Api::V1::ManualSlotsController < Api::V1::BaseController
     @manual_slot.destroy
   end
 
+  def manual_slot_by_blueprint_id
+    manual_slot = ManualSlot.find_by(manual_slot_blueprint_id: params[:blueprint_id])
+    if not manual_slot.nil?
+      render json: manual_slot
+    else
+      render json: {status: "not found"}, status: :not_found
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_manual_slot

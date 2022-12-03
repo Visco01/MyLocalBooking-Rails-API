@@ -38,6 +38,15 @@ class Api::V1::PeriodicSlotsController < Api::V1::BaseController
     @periodic_slot.destroy
   end
 
+  def periodic_slot_by_blueprint_id
+    periodic_slot = PeriodicSlot.find_by(periodic_slot_blueprint_id: params[:blueprint_id])
+    if not periodic_slot.nil?
+      render json: periodic_slot
+    else
+      render json: {status: "not found"}, status: :not_found
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_periodic_slot
