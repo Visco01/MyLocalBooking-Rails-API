@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         get 'establishments_by_provider_id/:provider_id', :to => 'establishments#establishments_by_provider_id'
         get 'periodic_slot_by_blueprint_id/:blueprint_id', :to => 'periodic_slots#periodic_slot_by_blueprint_id'
         get 'manual_slot_by_blueprint_id/:blueprint_id', :to => 'manual_slots#manual_slot_by_blueprint_id'
+        get 'concrete_slot_by_blueprint_id/:blueprint_id', :to => 'slots#concrete_slot_by_blueprint_id'
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
         post 'reservations', :to => 'reservations#create'

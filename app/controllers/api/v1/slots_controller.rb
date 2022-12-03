@@ -76,6 +76,19 @@ class Api::V1::SlotsController < Api::V1::BaseController
     end
   end
 
+  def concrete_slot_by_blueprint_id
+    concrete_blueprint = PeriodicSlot.find_by(periodic_slot_blueprint_id: params[:blueprint_id])
+    if concrete_blueprint.nil?
+      concrete_blueprint = ManualSlot.find_by(manual_slot_blueprint_id: params[:blueprint_id])
+    end
+
+    if not concrete_blueprint.nil?
+      render json: concrete_blueprint
+    else
+      render json: {status: "not found"}, status: :not_found
+    end
+  end
+
   # PATCH/PUT /slots/1
   def update
     if @slot.update(slot_params)
