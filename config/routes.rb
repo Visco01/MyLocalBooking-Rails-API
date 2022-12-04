@@ -19,6 +19,7 @@ Rails.application.routes.draw do
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
         post 'reservations', :to => 'reservations#create'
         post 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
+        get 'reservations_by_slot_id/:slot_id', :to => 'reservations#reservations_by_slot_id'
 
         resources :app_users do
           resources :clients, :providers

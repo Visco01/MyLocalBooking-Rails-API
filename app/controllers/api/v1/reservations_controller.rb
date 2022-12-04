@@ -54,6 +54,11 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     end
   end
 
+  def reservations_by_slot_id
+    reservations = Reservation.where(slot_id: params[:slot_id])
+    render json: reservations
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_reservation
