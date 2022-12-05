@@ -15,10 +15,15 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
 
   # POST /establishments
   def create
-    @establishment = Establishment.new(establishment_params)
+    @establishment = Establishment.new(name: request.params[:name],
+                                       provider_id: request.params[:provider_id],
+                                       lat: request.params[:lat],
+                                       lng: request.params[:lng],
+                                       place_id: request.params[:place_id],
+                                       address: request.params[:address])
 
     if @establishment.save
-      render json: @establishment, status: :created, location: @establishment
+      render json: { status: "Created" }, status: :created, location: @establishment
     else
       render json: @establishment.errors, status: :unprocessable_entity
     end

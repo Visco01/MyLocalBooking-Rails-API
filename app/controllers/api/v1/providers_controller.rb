@@ -47,14 +47,30 @@ class Api::V1::ProvidersController < Api::V1::BaseController
     end
   end
 
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_provider
-      @provider = Provider.find(params[:id])
-    end
+  def create_establishment
+    establishment = Establishment.new(name: request.params[:name],
+                                      provider_id: request.params[:provider_id],
+                                      lat: request.params[:lat],
+                                      lng: request.params[:lng],
+                                      place_id: request.params[:place_id],
+                                      address: request.params[:address])
 
-    # Only allow a list of trusted parameters through.
-    def provider_params
-      params.require(:provider).permit(:isverified, :maxstrikes, :companyname)
+    if establishment.save
+      render json: { status: "Created" }, status: :created
+    else
+      render json: establishment.errors, status: :unprocessable_entity
     end
+  end
+
+
+  private
+  # Use callbacks to share common setup or constraints between actions.
+  def set_provider
+    @provider = Provider.find(params[:id])
+  end
+
+  # Only allow a list of trusted parameters through.
+  def provider_params
+    params.require(:provider).permit(:isverified, :maxstrikes, :companyname)
+  end
 end

@@ -18,6 +18,7 @@ Rails.application.routes.draw do
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
         post 'reservations', :to => 'reservations#create'
+        post 'create_establishments', :to => 'providers#create_establishment'
         post 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
         get 'reservations_by_slot_id/:slot_id', :to => 'reservations#reservations_by_slot_id'
 
@@ -31,7 +32,7 @@ Rails.application.routes.draw do
         resources :reservations
         resources :blacklists
         resources :strikes
-        resources :establishments
+        resources :establishments, except: [:create]
         resources :ratings
         resources :slot_blueprints
         resources :manual_slot_blueprints, except: [:create]
