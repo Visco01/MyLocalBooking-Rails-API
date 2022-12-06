@@ -56,7 +56,7 @@ class Api::V1::ProvidersController < Api::V1::BaseController
                                       address: request.params[:address])
 
     if establishment.save
-      render json: { status: "Created" }, status: :created
+      render json: { status: "Created", establishment_id: Establishment.last.id }, status: :created
     else
       render json: establishment.errors, status: :unprocessable_entity
     end
