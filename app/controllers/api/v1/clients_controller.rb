@@ -33,6 +33,20 @@ class Api::V1::ClientsController < Api::V1::BaseController
     end
   end
 
+  def set_preferred_position
+    client = Client.find(params[:id])
+    if not client.nil?
+      if client.update(lat: request.params[:lat], lng: request.params[:lng])
+        render json: { status: "updated" }, status: 200
+      else
+        render json: { status: "unprocessable entity" }, status: :unprocessable_entity
+      end
+    else
+      render json: { status: "not found" }, status: :not_found
+    end
+  end
+
+
   # DELETE /clients/1
   def destroy
     @client.destroy
