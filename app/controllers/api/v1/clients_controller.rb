@@ -46,6 +46,31 @@ class Api::V1::ClientsController < Api::V1::BaseController
     end
   end
 
+  def closest_establishments
+    client_lat = request.params[:lat]
+    client_lng = request.params[:lng]
+    range = request.params[:range]
+    establishments = Establishment.all
+
+    closest_establishments = Array.new
+
+    establishments.each do |elem|
+      sql = <<-SQL
+        select get_coordinates_distance_meters(#{client_lat}, #{client_lng}, #{elem.lat}, #{elem.lng});
+      SQL
+      result = execute_statement(sql)['get_coordinates_distance_meters']
+
+      if result <= range
+        closest_establishments.push(elem)
+      end
+    end
+
+    # closest_establishments.each do |elem|
+    #   print "\n\n#{elem}\n\n"
+    # end
+
+    render json: closest_establishments, status: 200
+  end
 
   # DELETE /clients/1
   def destroy
@@ -67,8 +92,20 @@ class Api::V1::ClientsController < Api::V1::BaseController
       @client = Client.find(params[:id])
     end
 
+
+
     # Only allow a list of trusted parameters through.
     def client_params
       params.fetch(:client, {})
+    end
+
+    def execute_statement(sql)
+      results = ActiveRecord::Base.connection.execute(sql)[0]
+
+      if results.present?
+        return results
+      else
+        return nil
+      end
     end
 end
