@@ -56,7 +56,7 @@ class Api::V1::ClientsController < Api::V1::BaseController
 
     establishments.each do |elem|
       sql = <<-SQL
-        select get_coordinates_distance_meters(#{client_lat}, #{client_lng}, #{elem.lat}, #{elem.lng});
+        select get_coordinates_distance_meters(#{request.params[:lat]}, #{request.params[:lng]}, #{elem.lat}, #{elem.lng});
       SQL
       result = execute_statement(sql)['get_coordinates_distance_meters']
 
