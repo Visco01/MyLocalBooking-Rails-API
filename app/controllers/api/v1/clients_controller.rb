@@ -47,16 +47,18 @@ class Api::V1::ClientsController < Api::V1::BaseController
   end
 
   def closest_establishments
-    client_lat = request.params[:lat]
-    client_lng = request.params[:lng]
-    range = request.params[:range]
+    request_body = JSON.parse(request.body.read)[0]
+    client_lat = request_body['lat']
+    client_lng = request_body['lng']
+    range = request_body['range']
+
     establishments = Establishment.all
 
     closest_establishments = Array.new
 
     establishments.each do |elem|
       sql = <<-SQL
-        select get_coordinates_distance_meters(#{request.params[:lat]}, #{request.params[:lng]}, #{elem.lat}, #{elem.lng});
+        select get_coordinates_distance_meters(#{client_lat}, #{client_lng}, #{elem.lat}, #{elem.lng});
       SQL
       result = execute_statement(sql)['get_coordinates_distance_meters']
 
@@ -65,9 +67,9 @@ class Api::V1::ClientsController < Api::V1::BaseController
       end
     end
 
-    # closest_establishments.each do |elem|
-    #   print "\n\n#{elem}\n\n"
-    # end
+    closest_establishments.each do |elem|
+      print "\n\n#{elem}\n\n"
+    end
 
     render json: closest_establishments, status: 200
   end
