@@ -54,7 +54,7 @@ class Api::V1::ClientsController < Api::V1::BaseController
 
     establishments = Establishment.all
 
-    closest_establishments = Array.new
+    closest_establishments_ids = Array.new
 
     establishments.each do |elem|
       sql = <<-SQL
@@ -63,15 +63,15 @@ class Api::V1::ClientsController < Api::V1::BaseController
       result = execute_statement(sql)['get_coordinates_distance_meters']
 
       if result <= range
-        closest_establishments.push(elem)
+        closest_establishments_ids.push(elem.id)
       end
     end
 
-    closest_establishments.each do |elem|
+    closest_establishments_ids.each do |elem|
       print "\n\n#{elem}\n\n"
     end
 
-    render json: closest_establishments, status: 200
+    render json: Establishment.where(id: closest_establishments_ids), status: 200
   end
 
   # DELETE /clients/1
