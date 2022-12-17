@@ -47,10 +47,9 @@ class Api::V1::ClientsController < Api::V1::BaseController
   end
 
   def closest_establishments
-    request_body = JSON.parse(request.body.read)[0]
-    client_lat = request_body['lat']
-    client_lng = request_body['lng']
-    range = request_body['range']
+    client_lat = params[:lat].to_f
+    client_lng = params[:lng].to_f
+    range = params[:range].to_i
 
     establishments = Establishment.all
 
