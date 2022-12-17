@@ -69,9 +69,9 @@ class Api::V1::ClientsController < Api::V1::BaseController
     closest_establishments_ids.each do |elem|
       print "\n\n#{elem}\n\n"
     end
+
     # [845, 848, 849, 853]
-    render json: Establishment.where(id: 845)
-    # render json: Establishment.where(id: closest_establishments_ids), status: 200
+    render json: Establishment.where(id: closest_establishments_ids)
   end
 
   # DELETE /clients/1
