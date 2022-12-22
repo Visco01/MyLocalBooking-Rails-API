@@ -15,12 +15,15 @@ class Api::V1::StrikesController < Api::V1::BaseController
 
   # POST /strikes
   def create
-    @strike = Strike.new(strike_params)
+    new_strike = Strike.new(strike_params)
+    old_strike = Strike.find_by(provider_id: new_strike.provider_id, usercellphone: new_strike.usercellphone)
 
-    if @strike.save
-      render json: @strike, status: :created, location: @strike
+    if !old_strike.nil?
+      old_strike.count += 1
+      update_strike(old_strike)
     else
-      render json: @strike.errors, status: :unprocessable_entity
+      new_strike.count = 1
+      save_strike(new_strike)
     end
   end
 
@@ -46,6 +49,23 @@ class Api::V1::StrikesController < Api::V1::BaseController
 
     # Only allow a list of trusted parameters through.
     def strike_params
-      params.require(:strike).permit(:usercellphone, :count, :provider_id)
+      params.require(:strike).permit(:usercellphone, :provider_id)
     end
+
+    def save_strike(strike)
+      if strike.save
+        render json: strike, status: :created
+      else
+        render json: strike.errors, status: :unprocessable_entity
+      end
+    end
+
+    def update_strike(strike)
+      if strike.update(count: strike.count)
+        render json: strike, status: :created
+      else
+        render json: strike.errors, status: :unprocessable_entity
+      end
+    end
+
 end
