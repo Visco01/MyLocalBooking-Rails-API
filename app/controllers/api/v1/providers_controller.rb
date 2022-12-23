@@ -69,7 +69,7 @@ class Api::V1::ProvidersController < Api::V1::BaseController
 
     render json: { error: 'Provider not found' }, status: :not_found if provider.nil?
     if provider.update(maxstrikes: new_max_strikes)
-      render json: provider, status: :ok
+      render json: { success: 'OK'}, status: :ok
     else
       render json: provider.errors, status: :unprocessable_entity
     end
