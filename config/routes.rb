@@ -16,13 +16,14 @@ Rails.application.routes.draw do
         get 'manual_slot_by_blueprint_id/:type/:blueprint_id', :to => 'manual_slots#manual_slot_by_blueprint_id'
         get 'concrete_slot_by_blueprint_id/:type/:blueprint_id', :to => 'slots#concrete_slot_by_blueprint_id'
         get 'closest_establishments', :to => 'clients#closest_establishments'
+        get 'reservations_by_slot_id/:slot_id', :to => 'reservations#reservations_by_slot_id'
         patch 'change_user_password/:cellphone', :to => 'app_users#change_user_password'
         patch 'change_slot_password/:id', :to => 'slots#change_slot_password'
         patch 'set_preferred_position/:id', :to => 'clients#set_preferred_position'
         post 'reservations', :to => 'reservations#create'
         post 'create_establishments', :to => 'providers#create_establishment'
         post 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
-        get 'reservations_by_slot_id/:slot_id', :to => 'reservations#reservations_by_slot_id'
+        post 'providers/:provider_id/set_max_strikes', :to => 'providers#set_max_strikes'
 
         resources :app_users do
           resources :clients, :providers

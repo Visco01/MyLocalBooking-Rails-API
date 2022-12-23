@@ -62,6 +62,18 @@ class Api::V1::ProvidersController < Api::V1::BaseController
     end
   end
 
+  def set_max_strikes
+    provider_id = params[:provider_id]
+    new_max_strikes = params[:new_max_strikes]
+    provider = Provider.find(provider_id)
+
+    render json: { error: 'Provider not found' }, status: :not_found if provider.nil?
+    if provider.update(maxstrikes: new_max_strikes)
+      render json: provider, status: :ok
+    else
+      render json: provider.errors, status: :unprocessable_entity
+    end
+  end
 
   private
   # Use callbacks to share common setup or constraints between actions.
