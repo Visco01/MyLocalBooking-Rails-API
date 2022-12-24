@@ -23,7 +23,7 @@ class Api::V1::RatingsController < Api::V1::BaseController
     existing_rating = Rating.find_by(client_id: client_id, establishment_id: establishment_id)
 
     if existing_rating.nil?
-      create_new_rating(rating, client_id, establishment_id, comment, rating)
+      create_new_rating(client_id, establishment_id, comment, rating)
     else
       existing_rating.comment = comment
       existing_rating.rating = rating
