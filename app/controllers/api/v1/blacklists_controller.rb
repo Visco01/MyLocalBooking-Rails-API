@@ -42,6 +42,7 @@ class Api::V1::BlacklistsController < Api::V1::BaseController
     blacklist = Blacklist.find_by(provider_id: request.params[:provider_id], usercellphone: request.params[:usercellphone])
     if not blacklist.nil?
       blacklist.destroy
+      render json: { "success": "deleted" }
     else
       render json: { "error": "not_found" }
     end
