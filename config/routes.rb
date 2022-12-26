@@ -24,6 +24,7 @@ Rails.application.routes.draw do
         post 'create_establishments', :to => 'providers#create_establishment'
         post 'delete_reservation_by_ids', :to => 'reservations#delete_reservation_by_ids'
         post 'providers/:provider_id/set_max_strikes', :to => 'providers#set_max_strikes'
+        delete 'providers/delete_blacklist_by_params', :to => 'blacklists#delete_blacklist_by_params'
 
         resources :app_users do
           resources :clients, :providers

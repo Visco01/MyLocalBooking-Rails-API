@@ -38,6 +38,15 @@ class Api::V1::BlacklistsController < Api::V1::BaseController
     @blacklist.destroy
   end
 
+  def delete_blacklist_by_params
+    blacklist = Blacklist.find_by(provider_id: request.params[:provider_id], usercellphone: request.params[:usercellphone])
+    if not blacklist.nil?
+      blacklist.destroy
+    else
+      render json: { "error": "not_found" }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_blacklist
