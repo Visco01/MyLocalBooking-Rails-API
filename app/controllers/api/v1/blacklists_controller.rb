@@ -15,12 +15,12 @@ class Api::V1::BlacklistsController < Api::V1::BaseController
 
   # POST /blacklists
   def create
-    @blacklist = Blacklist.new(blacklist_params)
+    blacklist = Blacklist.new(blacklist_params)
 
-    if @blacklist.save
-      render json: @blacklist, status: :created, location: @blacklist
+    if blacklist.save
+      render json: blacklist, status: :created
     else
-      render json: @blacklist.errors, status: :unprocessable_entity
+      render json: blacklist.errors, status: :unprocessable_entity
     end
   end
 
