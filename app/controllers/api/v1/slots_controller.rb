@@ -15,7 +15,11 @@ class Api::V1::SlotsController < Api::V1::BaseController
 
   def slot_password_by_id
     slot = Slot.find(params[:slot_id])
-    render json: { status: "OK", password_digest: slot.password_digest }
+    if (not slot.nil?) and slot.password_digest.nil?
+      render json: { status: "Null", password_digest: slot.password_digest }
+    else
+      render json: { status: "OK", password_digest: slot.password_digest }
+    end
   end
 
 
