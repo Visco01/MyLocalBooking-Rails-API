@@ -59,6 +59,23 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     render json: reservations
   end
 
+  def get_reservations_by_day
+    establishment_id = params[:establishment_id].to_i
+    date = params[:date].to_s
+
+    periodic_policy = Establishment.find(establishment_id)
+    result = nil
+    sql = nil
+    if periodic_policy
+      sql = "select * from get_periodic_reservations_by_day(#{establishment_id}, #{date});"
+    else
+      sql = "select * from get_manual_reservations_by_day(#{establishment_id}, #{date});"
+    end
+
+    result = ActiveRecord::Base.connection.execute(sql)
+    render json: result, status: 200
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_reservation
