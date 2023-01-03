@@ -64,16 +64,46 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     date = params[:date].to_s
 
     periodic_policy = Establishment.find(establishment_id)
-    result = nil
     sql = nil
     if periodic_policy
-      sql = "select * from get_periodic_reservations_by_day(#{establishment_id}, #{date});"
+      sql = "select * from get_periodic_reservations_by_date(#{establishment_id}, #{date});"
     else
-      sql = "select * from get_manual_reservations_by_day(#{establishment_id}, #{date});"
+      sql = "select * from get_manual_reservations_by_date(#{establishment_id}, #{date});"
     end
 
     result = ActiveRecord::Base.connection.execute(sql)
-    render json: result, status: 200
+
+    json = {}
+
+
+    json['blueprint_subclass_id'] = result[0]['periodic_slot_blueprint_id']
+    json['date'] = result[0]['date']
+    json['password_digest'] = result[0]['slot_password_digest']
+    json['owner_cellphone'] = result[0]['owner_cellphone']
+
+    unless periodic_policy
+      json['fromtime'] = result[0]['from_time']
+      json['totime'] = result[0]['to_time']
+    end
+
+    json['reservations'] = []
+    result.each_with_index do |elem, index|
+      json['reservations'].push
+      json['reservations'][index] = {}
+      json['reservations'][index]['app_user_id'] = elem['app_user_id']
+      json['reservations'][index]['subclass_id'] = elem['client_id']
+      json['reservations'][index]['cellphone'] = elem['cellphone']
+      json['reservations'][index]['password_digest'] = elem['user_password_digest']
+      json['reservations'][index]['firstname'] = elem['firstname']
+      json['reservations'][index]['lastname'] = elem['lastname']
+      json['reservations'][index]['email'] = elem['email']
+      json['reservations'][index]['dob'] = elem['dob']
+      json['reservations'][index]['coordinates'] = {}
+      json['reservations'][index]['coordinates']['lat'] = elem['lat']
+      json['reservations'][index]['coordinates']['lng'] = elem['lng']
+    end
+
+    render json: json.to_json, status: 200
   end
 
   private
