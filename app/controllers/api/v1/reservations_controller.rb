@@ -90,7 +90,7 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     result.each_with_index do |elem, index|
       json['reservations'].push
       json['reservations'][index] = {}
-      json['reservations'][index]['app_user_id'] = elem['app_user_id']
+      json['reservations'][index]['id'] = elem['app_user_id']
       json['reservations'][index]['subclass_id'] = elem['client_id']
       json['reservations'][index]['cellphone'] = elem['cellphone']
       json['reservations'][index]['password_digest'] = elem['user_password_digest']
