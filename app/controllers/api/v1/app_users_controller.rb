@@ -75,40 +75,31 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
   def app_user_by_cellphone
     app_user = AppUser.find_by(cellphone: params[:cellphone])
-    if not app_user.nil?
-      category = nil
+    if !app_user.nil?
+
+      json = {}
+      json['id'] = app_user.id
+      json['cellphone'] = app_user.cellphone
+      json['password_digest'] = app_user.password_digest
+      json['email'] = app_user.email
+      json['firstname'] = app_user.firstname
+      json['lastname'] = app_user.lastname
+      json['dob'] = app_user.dob
+
       concrete_user = Client.find_by(app_user_id: app_user.id)
-      if not concrete_user.nil?
-        category = "client"
-        render json: {status: "OK",
-                      app_user_id: app_user.id,
-                      cellphone: app_user.cellphone,
-                      password_digest: app_user.password_digest,
-                      email: app_user.email,
-                      firstname: app_user.firstname,
-                      lastname: app_user.lastname,
-                      dob: app_user.dob,
-                      concrete_user_id: concrete_user.id,
-                      lat: concrete_user.lat,
-                      lng: concrete_user.lng,
-                      category: category}
+      if !concrete_user.nil?
+        json['coordinates'] = {}
+        json['coordinates']['lng'] = concrete_user.lng
+        json['coordinates']['lat'] = concrete_user.lat
       else
         concrete_user = Provider.find_by(app_user_id: app_user.id)
-        category = "provider"
-        render json: {status: "OK",
-                      app_user_id: app_user.id,
-                      cellphone: app_user.cellphone,
-                      password_digest: app_user.password_digest,
-                      email: app_user.email,
-                      firstname: app_user.firstname,
-                      lastname: app_user.lastname,
-                      dob: app_user.dob,
-                      concrete_user_id: concrete_user.id,
-                      isverified: concrete_user.isverified,
-                      maxstrikes: concrete_user.maxstrikes,
-                      companyname: concrete_user.companyname,
-                      category: category}
+        json['subclass_id'] = concrete_user.id
+        json['verified'] = concrete_user.isverified
+        json['max_strikes'] = concrete_user.maxstrikes
+        json['company_name'] = concrete_user.companyname
       end
+
+      render json: json.to_json, status: 200
     else
       render json: {status: "not found", app_user_id: app_user}, status: :not_found
     end
