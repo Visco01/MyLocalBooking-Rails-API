@@ -25,14 +25,6 @@ class Api::V1::SlotsController < Api::V1::BaseController
 
   # POST /slots
   def create
-    # @slot = Slot.new(slot_params)
-
-    # if @slot.save
-    #   render json: @slot, status: :created, location: @slot
-    # else
-    #   render json: @slot.errors, status: :unprocessable_entity
-    # end
-
     begin
       json_object = request.params
       concrete_slot = nil
@@ -125,14 +117,14 @@ class Api::V1::SlotsController < Api::V1::BaseController
   def insert_periodic_slot(json_object)
     connection = ActiveRecord::Base.connection.raw_connection
     connection.exec_prepared('insert_periodic_slot',
-                             [json_object[:app_user_id], json_object[:date], json_object[:password_digest], json_object[:PeriodicSlot][:periodic_slot_blueprint_id]])
+                             [json_object[:owner_cellphone], json_object[:date], json_object[:password_digest], json_object[:PeriodicSlot][:periodic_slot_blueprint_id]])
   end
 
   # IN app_user_id bigint, IN date date, IN password_digest text, IN manual_slot_blueprint_id bigint, IN fromtime time without time zone, IN totime time
   def insert_manual_slot(json_object)
     connection = ActiveRecord::Base.connection.raw_connection
     connection.exec_prepared('insert_manual_slot',
-                             [json_object[:app_user_id], json_object[:date], json_object[:password_digest], json_object[:ManualSlot][:manual_slot_blueprint_id],
-                              json_object[:fromtime], json_object[:totime]])
+                             [json_object[:owner_cellphone], json_object[:date], json_object[:password_digest], json_object[:ManualSlot][:manual_slot_blueprint_id],
+                              json_object[:fromtime], json_object[:totime], json_object[:client_id]])
   end
 end
