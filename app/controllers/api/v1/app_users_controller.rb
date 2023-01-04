@@ -88,6 +88,7 @@ class Api::V1::AppUsersController < Api::V1::BaseController
 
       concrete_user = Client.find_by(app_user_id: app_user.id)
       if !concrete_user.nil?
+        json['subclass_id'] = concrete_user.id
         json['coordinates'] = {}
         json['coordinates']['lng'] = concrete_user.lng
         json['coordinates']['lat'] = concrete_user.lat
