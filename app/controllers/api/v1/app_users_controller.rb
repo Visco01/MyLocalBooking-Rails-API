@@ -91,12 +91,14 @@ class Api::V1::AppUsersController < Api::V1::BaseController
         json['coordinates'] = {}
         json['coordinates']['lng'] = concrete_user.lng
         json['coordinates']['lat'] = concrete_user.lat
+        json['type'] = 'client'
       else
         concrete_user = Provider.find_by(app_user_id: app_user.id)
         json['subclass_id'] = concrete_user.id
         json['verified'] = concrete_user.isverified
         json['max_strikes'] = concrete_user.maxstrikes
         json['company_name'] = concrete_user.companyname
+        json['type'] = 'provider'
       end
 
       render json: json.to_json, status: 200
