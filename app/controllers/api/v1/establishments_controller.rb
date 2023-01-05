@@ -46,7 +46,39 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
   def establishments_by_provider_id
     establishments = Establishment.where(provider_id: params[:provider_id])
     if not establishments.nil?
-      render json: establishments
+      json = []
+      establishments.each_with_index do |est, i|
+        # print "\n\n#{get_slot_blueprints_by_est(est.id, est.has_periodic_policy).values}"
+        json[i] = {}
+        json[i]['id'] = est.id
+        json[i]['provider_cellphone'] = AppUser.find(Provider.find(est.provider_id).app_user_id).cellphone
+        json[i]['name'] = est.name
+        json[i]['address'] = est.address
+        json[i]['place_id'] = est.place_id
+        json[i]['coordinates'] = {}
+        json[i]['coordinates']['lat'] = est.lat
+        json[i]['coordinates']['lng'] = est.lng
+
+        json[i]['slot_blueprints'] = []
+        slot_blueprints = get_slot_blueprints_by_est(est.id, est.has_periodic_policy)
+
+        slot_blueprints.values.each_with_index do |slot, j|
+          json[i]['slot_blueprints'][j] = {}
+          json[i]['slot_blueprints'][j]['type'] = est.has_periodic_policy ? 'periodic' : 'manual'
+          json[i]['slot_blueprints'][j]['subclass_id'] = slot[0]
+
+          if est.has_periodic_policy
+            json[i]['slot_blueprints'][j]['from_time'] = slot[1]
+            json[i]['slot_blueprints'][j]['to_time'] = slot[2]
+          else
+            json[i]['slot_blueprints'][j]['open_time'] = slot[1]
+            json[i]['slot_blueprints'][j]['close_time'] = slot[2]
+            json[i]['slot_blueprints'][j]['max_duration'] = slot[4]
+          end
+        end
+      end
+
+      render json: json
     else
       render json: {status: "not found"}, status: :not_found
     end
@@ -61,5 +93,26 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
     # Only allow a list of trusted parameters through.
     def establishment_params
       params.require(:establishment).permit(:name, :provider_id, :lat, :long)
+    end
+
+    def get_slot_blueprints_by_est(id, periodic_policy)
+      slot_blueprints = nil
+      if periodic_policy
+        sql  = "select * from slot_blueprints sb
+                inner join periodic_slot_blueprints psb
+                on sb.id = psb.slot_blueprint_id
+                where sb.establishment_id = #{id}"
+        slot_blueprints = ActiveRecord::Base.connection.execute(sql)
+        print "\n\n ooooo \n\n"
+      else
+        sql  = "select * from slot_blueprints sb
+                inner join manual_slot_blueprints msb
+                on sb.id = msb.slot_blueprint_id
+                where sb.establishment_id = #{id}"
+        slot_blueprints = ActiveRecord::Base.connection.execute(sql)
+        print "\n\n aaaaa \n\n"
+      end
+
+      slot_blueprints
     end
 end
