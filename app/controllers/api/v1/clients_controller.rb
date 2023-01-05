@@ -66,12 +66,9 @@ class Api::V1::ClientsController < Api::V1::BaseController
       end
     end
 
-    closest_establishments_ids.each do |elem|
-      print "\n\n#{elem}\n\n"
-    end
+    json = get_establishments_json_response(Establishment.where(id: closest_establishments_ids))
 
-    # [845, 848, 849, 853]
-    render json: Establishment.where(id: closest_establishments_ids)
+    render json: json
   end
 
   # DELETE /clients/1
@@ -109,5 +106,61 @@ class Api::V1::ClientsController < Api::V1::BaseController
       else
         return nil
       end
+    end
+
+    def get_slot_blueprints_by_est(id, periodic_policy)
+      slot_blueprints = nil
+      if periodic_policy
+        sql  = "select * from slot_blueprints sb
+                inner join periodic_slot_blueprints psb
+                on sb.id = psb.slot_blueprint_id
+                where sb.establishment_id = #{id}"
+        slot_blueprints = ActiveRecord::Base.connection.execute(sql)
+        print "\n\n ooooo \n\n"
+      else
+        sql  = "select * from slot_blueprints sb
+                inner join manual_slot_blueprints msb
+                on sb.id = msb.slot_blueprint_id
+                where sb.establishment_id = #{id}"
+        slot_blueprints = ActiveRecord::Base.connection.execute(sql)
+        print "\n\n aaaaa \n\n"
+      end
+
+      slot_blueprints
+    end
+
+    def get_establishments_json_response(establishments)
+      json = []
+      establishments.each_with_index do |est, i|
+        json[i] = {}
+        json[i]['id'] = est.id
+        json[i]['provider_cellphone'] = AppUser.find(Provider.find(est.provider_id).app_user_id).cellphone
+        json[i]['name'] = est.name
+        json[i]['address'] = est.address
+        json[i]['place_id'] = est.place_id
+        json[i]['coordinates'] = {}
+        json[i]['coordinates']['lat'] = est.lat
+        json[i]['coordinates']['lng'] = est.lng
+
+        json[i]['slot_blueprints'] = []
+        slot_blueprints = get_slot_blueprints_by_est(est.id, est.has_periodic_policy)
+
+        slot_blueprints.values.each_with_index do |slot, j|
+          json[i]['slot_blueprints'][j] = {}
+          json[i]['slot_blueprints'][j]['type'] = est.has_periodic_policy ? 'periodic' : 'manual'
+          json[i]['slot_blueprints'][j]['subclass_id'] = slot[0]
+
+          if est.has_periodic_policy
+            json[i]['slot_blueprints'][j]['from_time'] = slot[1]
+            json[i]['slot_blueprints'][j]['to_time'] = slot[2]
+          else
+            json[i]['slot_blueprints'][j]['open_time'] = slot[1]
+            json[i]['slot_blueprints'][j]['close_time'] = slot[2]
+            json[i]['slot_blueprints'][j]['max_duration'] = slot[4]
+          end
+        end
+      end
+
+      json
     end
 end
