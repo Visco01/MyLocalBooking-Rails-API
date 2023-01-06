@@ -71,19 +71,20 @@ class Api::V1::ReservationsController < Api::V1::BaseController
       sql = "select * from get_manual_reservations_by_date(#{establishment_id}, #{date});"
     end
 
-    result = ActiveRecord::Base.connection.execute(sql)
+    result = ActiveRecord::Base.connection.execute(sql).values
 
     json = {}
 
+    if not result[0].nil?
+      json['blueprint_subclass_id'] = result[0]['periodic_slot_blueprint_id']
+      json['date'] = result[0]['date']
+      json['password_digest'] = result[0]['slot_password_digest']
+      json['owner_cellphone'] = result[0]['owner_cellphone']
 
-    json['blueprint_subclass_id'] = result[0]['periodic_slot_blueprint_id']
-    json['date'] = result[0]['date']
-    json['password_digest'] = result[0]['slot_password_digest']
-    json['owner_cellphone'] = result[0]['owner_cellphone']
-
-    unless periodic_policy
-      json['fromtime'] = result[0]['from_time']
-      json['totime'] = result[0]['to_time']
+      unless periodic_policy
+        json['fromtime'] = result[0]['from_time']
+        json['totime'] = result[0]['to_time']
+      end
     end
 
     json['reservations'] = []
