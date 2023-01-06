@@ -104,7 +104,11 @@ class Api::V1::ReservationsController < Api::V1::BaseController
       json['reservations'][index]['coordinates']['lng'] = elem['lng']
     end
 
-    render json: json.to_json, status: 200
+    if result[0].nil?
+      render json: [], status: 200
+    else
+      render json: json.to_json, status: 200
+    end
   end
 
   private
