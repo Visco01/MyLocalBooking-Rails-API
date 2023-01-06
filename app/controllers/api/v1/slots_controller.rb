@@ -35,7 +35,7 @@ class Api::V1::SlotsController < Api::V1::BaseController
         begin
           insert_periodic_slot(json_object)
         rescue PG::InvalidSqlStatementName => e
-          connection.prepare('insert_periodic_slot', 'CALL insert_periodic_slot($1, $2, $3, $4)')
+          connection.prepare('insert_periodic_slot', 'CALL insert_periodic_slot($1, $2, $3, $4, $5)')
           insert_periodic_slot(json_object)
         end
 
