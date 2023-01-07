@@ -63,7 +63,7 @@ class Api::V1::ReservationsController < Api::V1::BaseController
     establishment_id = params[:establishment_id].to_i
     date = params[:date].to_s
 
-    periodic_policy = Establishment.find(establishment_id)
+    periodic_policy = Establishment.find(establishment_id).has_periodic_policy
     sql = nil
     if periodic_policy
       sql = "select * from get_periodic_reservations_by_date(#{establishment_id}, #{date});"
@@ -73,42 +73,52 @@ class Api::V1::ReservationsController < Api::V1::BaseController
 
     result = ActiveRecord::Base.connection.execute(sql).values
 
-    json = {}
-
     if not result[0].nil?
-      json['blueprint_subclass_id'] = result[0]['periodic_slot_blueprint_id']
-      json['date'] = result[0]['date']
-      json['password_digest'] = result[0]['slot_password_digest']
-      json['owner_cellphone'] = result[0]['owner_cellphone']
+      json = []
+      slot_id = result[0][0]
+      k = 0
+      j = -1
+      result.each_with_index do |elem, index|
+        if slot_id != result[index][0] or index.zero?
+          slot_id = result[index][0]
+          j += 1
+          k = 0
+          json.push
+          json[j] = {}
 
-      unless periodic_policy
-        json['fromtime'] = result[0]['from_time']
-        json['totime'] = result[0]['to_time']
+          json[j]['id'] = elem[0]
+          json[j]['subclass_id'] = elem[15]
+          json[j]['date'] = elem[2].to_s
+          json[j]['password_digest'] = elem[1]
+          json[j]['owner_cellphone'] = elem[3]
+
+          unless periodic_policy
+            json[j]['from_time'] = elem[16]
+            json[j]['to_time'] = elem[17]
+          end
+
+          json[j]['reservations'] = []
+        end
+        json[j]['reservations'].push
+        json[j]['reservations'][k] = {}
+        json[j]['reservations'][k]['id'] = elem[4]
+        json[j]['reservations'][k]['subclass_id'] = elem[11]
+        json[j]['reservations'][k]['cellphone'] = elem[5]
+        json[j]['reservations'][k]['password_digest'] = elem[6]
+        json[j]['reservations'][k]['firstname'] = elem[8]
+        json[j]['reservations'][k]['lastname'] = elem[9]
+        json[j]['reservations'][k]['email'] = elem[7]
+        json[j]['reservations'][k]['dob'] = elem[10]
+        json[j]['reservations'][k]['coordinates'] = {}
+        json[j]['reservations'][k]['coordinates']['lat'] = elem[12]
+        json[j]['reservations'][k]['coordinates']['lng'] = elem[13]
+        k += 1
+        # print "\n\n #{slot_id} \n\n"
+        # print "\n\n #{json[j]} \n\n"
+
       end
     end
-
-    json['reservations'] = []
-    result.each_with_index do |elem, index|
-      json['reservations'].push
-      json['reservations'][index] = {}
-      json['reservations'][index]['id'] = elem['app_user_id']
-      json['reservations'][index]['subclass_id'] = elem['client_id']
-      json['reservations'][index]['cellphone'] = elem['cellphone']
-      json['reservations'][index]['password_digest'] = elem['user_password_digest']
-      json['reservations'][index]['firstname'] = elem['firstname']
-      json['reservations'][index]['lastname'] = elem['lastname']
-      json['reservations'][index]['email'] = elem['email']
-      json['reservations'][index]['dob'] = elem['dob']
-      json['reservations'][index]['coordinates'] = {}
-      json['reservations'][index]['coordinates']['lat'] = elem['lat']
-      json['reservations'][index]['coordinates']['lng'] = elem['lng']
-    end
-
-    if result[0].nil?
-      render json: [], status: 200
-    else
-      render json: json.to_json, status: 200
-    end
+    render json: json, status: 200
   end
 
   private
