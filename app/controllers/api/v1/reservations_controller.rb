@@ -87,7 +87,8 @@ class Api::V1::ReservationsController < Api::V1::BaseController
           json[j] = {}
 
           json[j]['id'] = elem[0]
-          json[j]['subclass_id'] = elem[15]
+          json[j]['subclass_id'] = elem[14]
+          json[j]['blueprint_subclass_id'] = elem[15]
           json[j]['type'] = 'periodic' if periodic_policy
           json[j]['type'] = 'manual' unless periodic_policy
           json[j]['date'] = elem[2].to_s
