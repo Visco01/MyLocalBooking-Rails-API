@@ -124,7 +124,11 @@ class Api::V1::ReservationsController < Api::V1::BaseController
 
       end
     end
-    render json: [], status: 200
+    if json.nil?
+      render json: [], status: 200
+    else
+      render json: json, status: 200
+    end
   end
 
   private
