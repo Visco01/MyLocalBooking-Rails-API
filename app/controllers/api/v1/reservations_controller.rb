@@ -112,9 +112,12 @@ class Api::V1::ReservationsController < Api::V1::BaseController
         json[j]['reservations'][k]['lastname'] = elem[9]
         json[j]['reservations'][k]['email'] = elem[7]
         json[j]['reservations'][k]['dob'] = elem[10]
-        json[j]['reservations'][k]['coordinates'] = {}
-        json[j]['reservations'][k]['coordinates']['lat'] = elem[12]
-        json[j]['reservations'][k]['coordinates']['lng'] = elem[13]
+
+        unless elem[12].nil? && elem[13].nil?
+          json[j]['reservations'][k]['coordinates'] = {}
+          json[j]['reservations'][k]['coordinates']['lat'] = elem[12]
+          json[j]['reservations'][k]['coordinates']['lng'] = elem[13]
+        end
         k += 1
         # print "\n\n #{slot_id} \n\n"
         # print "\n\n #{json[j]} \n\n"
