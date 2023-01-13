@@ -124,7 +124,7 @@ class Api::V1::ReservationsController < Api::V1::BaseController
 
       end
     end
-    render json: json, status: 200
+    render json: [], status: 200
   end
 
   private
