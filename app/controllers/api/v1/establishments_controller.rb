@@ -65,7 +65,12 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
         slot_blueprints.values.each_with_index do |slot, j|
           json[i]['slot_blueprints'][j] = {}
           json[i]['slot_blueprints'][j]['type'] = est.has_periodic_policy ? 'periodic' : 'manual'
-          json[i]['slot_blueprints'][j]['subclass_id'] = slot[0]
+          json[i]['slot_blueprints'][j]['id'] = slot[0]
+          json[i]['slot_blueprints'][j]['weekdays'] = slot[1]
+          json[i]['slot_blueprints'][j]['reservation_limit'] = slot[2]
+          json[i]['slot_blueprints'][j]['from_date'] = slot[3]
+          json[i]['slot_blueprints'][j]['to_date'] = slot[4]
+          json[i]['slot_blueprints'][j]['subclass_id'] = slot[6]
 
           if est.has_periodic_policy
             json[i]['slot_blueprints'][j]['from_time'] = slot[1]
