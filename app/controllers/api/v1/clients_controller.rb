@@ -60,7 +60,7 @@ class Api::V1::ClientsController < Api::V1::BaseController
     if json.nil?
       render json: [], status: 200
     else
-      render json: json, status: 200
+      render json: json[0], status: 200
     end
   end
 
