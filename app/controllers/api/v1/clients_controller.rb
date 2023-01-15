@@ -46,6 +46,24 @@ class Api::V1::ClientsController < Api::V1::BaseController
     end
   end
 
+  def reservations_by_client
+    client_id = params[:client_id]
+
+    sql = "select * from get_periodic_reservations_by_client(#{client_id})"
+    periodic_res = ActiveRecord::Base.connection.execute(sql).values
+    sql = "select * from get_manual_reservations_by_client(#{client_id})"
+    manual_res = ActiveRecord::Base.connection.execute(sql).values
+
+    json = get_reservations_json_response(periodic_res, true)
+    json.append(get_reservations_json_response(manual_res, false))
+
+    if json.nil?
+      render json: [], status: 200
+    else
+      render json: json, status: 200
+    end
+  end
+
   def closest_establishments
     client_lat = params[:lat].to_f
     client_lng = params[:lng].to_f
@@ -166,6 +184,58 @@ class Api::V1::ClientsController < Api::V1::BaseController
         end
       end
 
+      json
+    end
+
+    def get_reservations_json_response(result, periodic_policy)
+      json = []
+      if not result[0].nil?
+        slot_id = result[0][0]
+        k = 0
+        j = -1
+        result.each_with_index do |elem, index|
+          if slot_id != result[index][0] or index.zero?
+            slot_id = result[index][0]
+            j += 1
+            k = 0
+            json.push
+            json[j] = {}
+
+            json[j]['id'] = elem[0]
+            json[j]['subclass_id'] = elem[14]
+            json[j]['blueprint_subclass_id'] = elem[15]
+            json[j]['type'] = 'periodic' if periodic_policy
+            json[j]['type'] = 'manual' unless periodic_policy
+            json[j]['date'] = elem[2].to_s
+            json[j]['password_digest'] = elem[1]
+            json[j]['owner_cellphone'] = elem[3]
+
+            unless periodic_policy
+              json[j]['from_time'] = elem[16]
+              json[j]['to_time'] = elem[17]
+            end
+
+            json[j]['reservations'] = []
+          end
+          json[j]['reservations'].push
+          json[j]['reservations'][k] = {}
+          json[j]['reservations'][k]['id'] = elem[4]
+          json[j]['reservations'][k]['subclass_id'] = elem[11]
+          json[j]['reservations'][k]['cellphone'] = elem[5]
+          json[j]['reservations'][k]['password_digest'] = elem[6]
+          json[j]['reservations'][k]['firstname'] = elem[8]
+          json[j]['reservations'][k]['lastname'] = elem[9]
+          json[j]['reservations'][k]['email'] = elem[7]
+          json[j]['reservations'][k]['dob'] = elem[10]
+
+          unless elem[12].nil? && elem[13].nil?
+            json[j]['reservations'][k]['coordinates'] = {}
+            json[j]['reservations'][k]['coordinates']['lat'] = elem[12]
+            json[j]['reservations'][k]['coordinates']['lng'] = elem[13]
+          end
+          k += 1
+        end
+      end
       json
     end
 end
