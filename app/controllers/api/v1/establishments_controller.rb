@@ -73,12 +73,12 @@ class Api::V1::EstablishmentsController < Api::V1::BaseController
           json[i]['slot_blueprints'][j]['subclass_id'] = slot[6]
 
           if est.has_periodic_policy
-            json[i]['slot_blueprints'][j]['from_time'] = slot[1]
-            json[i]['slot_blueprints'][j]['to_time'] = slot[2]
+            json[i]['slot_blueprints'][j]['from_time'] = slot[7]
+            json[i]['slot_blueprints'][j]['to_time'] = slot[8]
           else
-            json[i]['slot_blueprints'][j]['open_time'] = slot[1]
-            json[i]['slot_blueprints'][j]['close_time'] = slot[2]
-            json[i]['slot_blueprints'][j]['max_duration'] = slot[4]
+            json[i]['slot_blueprints'][j]['open_time'] = slot[7]
+            json[i]['slot_blueprints'][j]['close_time'] = slot[8]
+            json[i]['slot_blueprints'][j]['max_duration'] = slot[10]
           end
         end
       end
