@@ -55,12 +55,12 @@ class Api::V1::ClientsController < Api::V1::BaseController
     manual_res = ActiveRecord::Base.connection.execute(sql).values
 
     json = get_reservations_json_response(periodic_res, true)
-    json.append(get_reservations_json_response(manual_res, false))
+    json.concat(get_reservations_json_response(manual_res, false))
 
     if json.nil?
       render json: [], status: 200
     else
-      render json: json[0], status: 200
+      render json: json, status: 200
     end
   end
 
